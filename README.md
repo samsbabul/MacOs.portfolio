@@ -77,3 +77,4 @@ If the key fails, it automatically falls back to Open-Meteo. Location uses the b
 Reset everything from the **Trash** app (Empty Trash & reset).
 # MacOs.portfolio
 # MacOs.portfolio
+# portfolio.SamOS
