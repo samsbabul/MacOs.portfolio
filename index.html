@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0c">
+<meta name="description" content="Interactive macOS-style desktop portfolio">
+<title>Mac OS</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23b3121f'/%3E%3Cg stroke='white' fill='none' stroke-width='1.4'%3E%3Ccircle cx='12' cy='12' r='7'/%3E%3Ccircle cx='12' cy='12' r='3.5'/%3E%3Cpath d='M12 5v14M5 12h14M7 7l10 10M17 7L7 17'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wallpaper" id="wallpaper" aria-hidden="true"></div>
+
+<!-- ===== TOP MENU BAR ===== -->
+<header class="menubar" role="menubar" aria-label="Menu bar">
+  <div class="mb-left">
+    <button class="mb-item mb-logo" data-menu="apple" aria-haspopup="menu" aria-expanded="false" aria-label="Portfolio menu">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"/></svg>
+    </button>
+    <button class="mb-item bold" data-menu="finder" aria-haspopup="menu" aria-expanded="false">Finder</button>
+    <button class="mb-item" data-menu="file" aria-haspopup="menu" aria-expanded="false">File</button>
+    <button class="mb-item" data-menu="edit" aria-haspopup="menu" aria-expanded="false">Edit</button>
+    <button class="mb-item" data-menu="view" aria-haspopup="menu" aria-expanded="false">View</button>
+    <button class="mb-item" data-menu="go" aria-haspopup="menu" aria-expanded="false">Go</button>
+    <button class="mb-item" data-menu="window" aria-haspopup="menu" aria-expanded="false">Window</button>
+    <button class="mb-item" data-menu="help" aria-haspopup="menu" aria-expanded="false">Help</button>
+  </div>
+  <div class="mb-right">
+    <span class="mb-ico" id="wifi" role="img" aria-label="Network online" title="Online">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 9a15 15 0 0 1 20 0M5 12.5a10.5 10.5 0 0 1 14 0M8.5 16a5.5 5.5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1" fill="currentColor"/></svg>
+    </span>
+    <span class="mb-ico" id="battery" title="Battery">
+      <span id="batPct" hidden></span>
+      <svg viewBox="0 0 24 24" width="22" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="7" width="17" height="10" rx="2.5"/><path d="M21 10.5v3" stroke-linecap="round"/><rect id="batFill" x="4" y="9" width="13" height="6" rx="1.2" fill="currentColor" stroke="none"/></svg>
+    </span>
+    <button class="mb-ico" id="searchBtn" aria-label="Search (Ctrl or Cmd + K)" title="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+    </button>
+    <button class="mb-ico" id="ccBtn" aria-label="Control Center" aria-expanded="false" title="Control Center">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5.5" width="18" height="5.5" rx="2.75"/><circle cx="8" cy="8.25" r="1.3" fill="currentColor" stroke="none"/><rect x="3" y="13" width="18" height="5.5" rx="2.75"/><circle cx="16" cy="15.75" r="1.3" fill="currentColor" stroke="none"/></svg>
+    </button>
+    <span class="mb-text" id="mbDate"></span>
+    <span class="mb-text" id="mbTime"></span>
+  </div>
+</header>
+
+<div class="dropdown" id="menuDropdown" role="menu" hidden></div>
+<div class="cc" id="controlCenter" role="dialog" aria-label="Control Center" hidden></div>
+
+<!-- ===== DESKTOP ===== -->
+<main class="desktop" id="desktop">
+
+  <section class="col col-left" aria-label="Left widgets">
+    <div class="row">
+      <button class="w w-clock" id="clockWidget" aria-label="Open Clock app">
+        <span class="wc-time"><span id="wcHM">--:--</span><span class="wc-side"><small id="wcSec">00</small><small id="wcAp"></small></span></span>
+        <span class="wc-date" id="wcDate"></span>
+      </button>
+      <button class="desk-icon" data-open="projects" aria-label="Open Projects folder">
+        <span class="folder" aria-hidden="true"></span><span class="di-label">Projects</span>
+      </button>
+    </div>
+
+    <article class="w w-weather wide" id="weather" aria-label="Weather"></article>
+
+    <div class="w w-tagline wide" id="tagline"></div>
+
+    <div class="row">
+      <button class="w w-nametag" data-open="portfolio" aria-label="Open Portfolio">
+        <span class="nt-top">HELLO</span><span class="nt-sub">my name is</span><span class="nt-name" id="ntName"></span>
+      </button>
+      <button class="w w-photo" data-open="portfolio" aria-label="Open Portfolio (profile photo)"><img id="profileImg" alt="Profile photo" loading="lazy"></button>
+    </div>
+  </section>
+
+  <button class="hero" id="hero" aria-label="Open Portfolio"></button>
+
+  <section class="col col-right" aria-label="Right widgets">
+    <article class="w w-cal wide" id="calWidget" aria-label="Calendar"></article>
+
+    <article class="w w-stats wide" aria-label="Portfolio statistics">
+      <div class="stat"><span class="stat-l">VISITS</span><span class="stat-v" id="stVisits">0</span></div>
+      <div class="stat"><span class="stat-l">PROJECTS</span><span class="stat-v" id="stProjects">0</span></div>
+      <div class="stat"><span class="stat-l">CODING</span><span class="stat-v" id="stCoding">0</span></div>
+      <div class="stat"><span class="stat-l">LEVEL</span><span class="stat-v" id="stLevel">-</span></div>
+    </article>
+
+    <article class="w w-yt wide" id="ytWidget" aria-label="YouTube launcher">
+      <div class="yt-head"><span id="ytIcon"></span><b>YouTube</b></div>
+      <form id="ytForm" class="yt-form" novalidate>
+        <input id="ytInput" type="text" inputmode="url" autocomplete="off" placeholder="Paste a YouTube link" aria-label="YouTube URL">
+        <button class="btn primary" type="submit">Open YouTube</button>
+      </form>
+      <p class="yt-err" id="ytErr" role="alert" aria-live="polite"></p>
+    </article>
+
+    <article class="w w-quote wide" id="quote" aria-label="Quote">
+      <p id="quoteText"></p>
+      <button id="quoteEdit" class="q-edit" aria-label="Edit quote">&#9998;</button>
+    </article>
+  </section>
+
+  <section class="w w-gallery" id="galleryStrip" aria-label="Gallery"></section>
+</main>
+
+<!-- Mobile app grid -->
+<section class="app-grid" id="appGrid" aria-label="Apps"></section>
+
+<!-- ===== DOCK ===== -->
+<nav class="dock" id="dock" aria-label="Dock"><div class="dock-inner" id="dockInner"></div></nav>
+
+<!-- Windows -->
+<div id="windows"></div>
+
+<!-- Spotlight -->
+<div class="spotlight" id="spotlight" hidden>
+  <div class="sp-backdrop" data-close="spotlight"></div>
+  <div class="sp-box" role="dialog" aria-label="Spotlight search">
+    <div class="sp-input">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+      <input id="spInput" type="text" placeholder="Spotlight Search" autocomplete="off" role="combobox" aria-expanded="true" aria-controls="spResults" aria-label="Search apps and projects">
+    </div>
+    <ul class="sp-results" id="spResults" role="listbox"></ul>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lb-btn lb-close" id="lbClose" aria-label="Close viewer">&times;</button>
+  <button class="lb-btn lb-prev" id="lbPrev" aria-label="Previous image">&#8249;</button>
+  <figure class="lb-fig"><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure>
+  <button class="lb-btn lb-next" id="lbNext" aria-label="Next image">&#8250;</button>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
