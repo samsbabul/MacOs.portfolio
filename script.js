@@ -160,7 +160,7 @@ if (!WALLS.some(([value]) => value === settings.wallpaper)) settings.wallpaper =
 
 function setSetting(k, v) {
   settings[k] = v;
-  const startWallpaperWithSound = k === 'wallpaper' && v === 'wall8';
+  const startWallpaperWithSound = k === 'wallpaper' && (v === 'wall7' || v === 'wall8');
   if (startWallpaperWithSound) settings.wallpaperSound = true;
   store.set('pf_settings', settings);
   applySettings();
@@ -168,7 +168,8 @@ function setSetting(k, v) {
 function syncWallpaperSoundButton() {
   const button = $('#wallpaperSound');
   const muted = $('#wallpaperVideo').muted;
-  button.hidden = settings.wallpaper !== 'wall8';
+  const videoWallpaper = settings.wallpaper === 'wall7' || settings.wallpaper === 'wall8';
+  button.hidden = !videoWallpaper;
   button.textContent = muted ? 'Sound on' : 'Mute sound';
   button.setAttribute('aria-label', muted ? 'Enable wallpaper sound' : 'Mute wallpaper sound');
   button.title = muted ? 'Enable wallpaper sound' : 'Mute wallpaper sound';
@@ -177,22 +178,34 @@ function applySettings() {
   document.documentElement.dataset.theme = settings.theme;
   document.documentElement.style.setProperty('--wall', `url('${settings.wallpaper}.jpg') center/cover no-repeat`);
   const video = $('#wallpaperVideo');
-  const videoWallpaper = settings.wallpaper === 'wall8';
-  video.hidden = !videoWallpaper;
-  if (videoWallpaper) {
+  const videoSource = settings.wallpaper === 'wall7' ? 'vid2.mp4' : settings.wallpaper === 'wall8' ? 'vid1.mp4' : '';
+  video.hidden = !videoSource;
+  if (videoSource) {
+    if (video.getAttribute('src') !== videoSource) {
+      video.pause();
+      video.src = videoSource;
+      video.load();
+    }
     video.muted = !settings.wallpaperSound;
     const play = video.play();
     if (play) play.catch(error => {
-      video.muted = true;
-      syncWallpaperSoundButton();
-      if (error.name === 'NotAllowedError') {
-        toast('Browser blocked wallpaper audio. Click Sound on in the top bar.');
+      if (error.name === 'NotAllowedError' && !video.muted) {
+        video.muted = true;
+        settings.wallpaperSound = false;
+        store.set('pf_settings', settings);
+        syncWallpaperSoundButton();
+        const mutedPlay = video.play();
+        if (mutedPlay) mutedPlay.catch(() => {
+          toast(`Wallpaper video could not start. Check that ${videoSource} is available.`);
+        });
       } else {
-        toast('Wallpaper video could not start. Check that vid1.mp4 is available.');
+        toast(`Wallpaper video could not start. Check that ${videoSource} is available.`);
       }
     });
   } else {
     video.pause();
+    video.removeAttribute('src');
+    video.load();
     video.muted = true;
   }
   syncWallpaperSoundButton();
@@ -977,6 +990,8 @@ $('#wallpaperSound').addEventListener('click', () => {
     const play = video.play();
     if (play) play.catch(() => {
       video.muted = true;
+      settings.wallpaperSound = false;
+      store.set('pf_settings', settings);
       syncWallpaperSoundButton();
       toast('Wallpaper sound could not be enabled. Please try again.');
     });

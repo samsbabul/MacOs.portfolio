@@ -67,7 +67,7 @@ If the key fails, it automatically falls back to Open-Meteo. Location uses the b
 * Draggable, minimizable, maximizable, closable windows with focus/z-index handling
 * Dock with magnification, tooltips, running indicators; **Instagram / GitHub / LinkedIn open directly from the dock**
 * Spotlight search (click the magnifier or press **Ctrl/⌘ + K**)
-* Settings app: dark/light, wallpaper, accent colour, 12/24h, reduce animations, °C/°F (saved in localStorage)
+* Settings app: dark/light, wallpaper, accent colour, 12/24h, reduce animations, °C/°F (saved in localStorage); Wallpapers 7 and 8 play `vid2.mp4` and `vid1.mp4` respectively, with a shared mute/unmute control and video loaded only while selected
 * YouTube launcher with URL validation (opens in a new tab — it never fakes playback)
 * Gallery with lazy-loading, lightbox (←/→/Esc, click to zoom)
 * Visit counter stored in localStorage
