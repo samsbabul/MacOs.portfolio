@@ -154,14 +154,48 @@ function openLink(key) {
    ========================================================================= */
 const ACCENTS = [['#e23636', 'Red'], ['#ff6a3d', 'Orange'], ['#f5b82e', 'Gold'], ['#34c759', 'Green'], ['#0a84ff', 'Blue'], ['#bf5af2', 'Purple']];
 const WALLS = [['wall1', 'Wallpaper 1'], ['wall2', 'Wallpaper 2'], ['wall3', 'Wallpaper 3'], ['wall4', 'Wallpaper 4'], ['wall5', 'Wallpaper 5'], ['wall6', 'Wallpaper 6'], ['wall7', 'Wallpaper 7'], ['wall8', 'Wallpaper 8']];
-const DEFAULTS = { theme: 'dark', wallpaper: 'wall1', clock24: false, accent: '#e23636', reduce: window.matchMedia('(prefers-reduced-motion: reduce)').matches, unit: 'C' };
+const DEFAULTS = { theme: 'dark', wallpaper: 'wall1', wallpaperSound: false, clock24: false, accent: '#e23636', reduce: window.matchMedia('(prefers-reduced-motion: reduce)').matches, unit: 'C' };
 let settings = { ...DEFAULTS, ...store.get('pf_settings', {}) };
 if (!WALLS.some(([value]) => value === settings.wallpaper)) settings.wallpaper = DEFAULTS.wallpaper;
 
-function setSetting(k, v) { settings[k] = v; store.set('pf_settings', settings); applySettings(); }
+function setSetting(k, v) {
+  settings[k] = v;
+  const startWallpaperWithSound = k === 'wallpaper' && v === 'wall8';
+  if (startWallpaperWithSound) settings.wallpaperSound = true;
+  store.set('pf_settings', settings);
+  applySettings();
+}
+function syncWallpaperSoundButton() {
+  const button = $('#wallpaperSound');
+  const muted = $('#wallpaperVideo').muted;
+  button.hidden = settings.wallpaper !== 'wall8';
+  button.textContent = muted ? 'Sound on' : 'Mute sound';
+  button.setAttribute('aria-label', muted ? 'Enable wallpaper sound' : 'Mute wallpaper sound');
+  button.title = muted ? 'Enable wallpaper sound' : 'Mute wallpaper sound';
+}
 function applySettings() {
   document.documentElement.dataset.theme = settings.theme;
   document.documentElement.style.setProperty('--wall', `url('${settings.wallpaper}.jpg') center/cover no-repeat`);
+  const video = $('#wallpaperVideo');
+  const videoWallpaper = settings.wallpaper === 'wall8';
+  video.hidden = !videoWallpaper;
+  if (videoWallpaper) {
+    video.muted = !settings.wallpaperSound;
+    const play = video.play();
+    if (play) play.catch(error => {
+      video.muted = true;
+      syncWallpaperSoundButton();
+      if (error.name === 'NotAllowedError') {
+        toast('Browser blocked wallpaper audio. Click Sound on in the top bar.');
+      } else {
+        toast('Wallpaper video could not start. Check that vid1.mp4 is available.');
+      }
+    });
+  } else {
+    video.pause();
+    video.muted = true;
+  }
+  syncWallpaperSoundButton();
   document.documentElement.style.setProperty('--accent', settings.accent);
   document.body.classList.toggle('reduce-motion', !!settings.reduce);
   $('meta[name="theme-color"]').setAttribute('content', settings.theme === 'dark' ? '#0a0a0c' : '#e8e8ee');
@@ -934,6 +968,21 @@ buildAppGrid();
 buildWidgets();
 initDockState();
 function initDockState() { netStatus(); updateDock(); }
+$('#wallpaperSound').addEventListener('click', () => {
+  const video = $('#wallpaperVideo');
+  video.muted = !video.muted;
+  settings.wallpaperSound = !video.muted;
+  store.set('pf_settings', settings);
+  if (!video.muted) {
+    const play = video.play();
+    if (play) play.catch(() => {
+      video.muted = true;
+      syncWallpaperSoundButton();
+      toast('Wallpaper sound could not be enabled. Please try again.');
+    });
+  }
+  syncWallpaperSoundButton();
+});
 applySettings();
 tick();
 initWeather();

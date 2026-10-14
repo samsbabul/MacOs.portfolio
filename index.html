@@ -11,7 +11,9 @@
 </head>
 <body>
 
-<div class="wallpaper" id="wallpaper" aria-hidden="true"></div>
+<div class="wallpaper" id="wallpaper" aria-hidden="true">
+  <video class="wallpaper-video" id="wallpaperVideo" src="vid1.mp4" autoplay loop muted playsinline preload="auto" hidden></video>
+</div>
 
 <!-- ===== TOP MENU BAR ===== -->
 <header class="menubar" role="menubar" aria-label="Menu bar">
@@ -28,6 +30,7 @@
     <button class="mb-item" data-menu="help" aria-haspopup="menu" aria-expanded="false">Help</button>
   </div>
   <div class="mb-right">
+    <button class="mb-ico wallpaper-sound" id="wallpaperSound" type="button" aria-label="Enable wallpaper sound" title="Enable wallpaper sound" hidden>Sound on</button>
     <span class="mb-ico" id="wifi" role="img" aria-label="Network online" title="Online">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 9a15 15 0 0 1 20 0M5 12.5a10.5 10.5 0 0 1 14 0M8.5 16a5.5 5.5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1" fill="currentColor"/></svg>
     </span>
