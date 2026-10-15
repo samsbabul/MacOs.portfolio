@@ -45,9 +45,9 @@ const PORTFOLIO_CONFIG = {
   ],
 
   projects: [
-    { title: "Project 1", description: "Short description of your first project and what problem it solves.", tech: ["HTML", "CSS", "JavaScript"], image: "https://i.pinimg.com/1200x/3d/04/83/3d0483e26273b36916b82f4d4aef0e8c.jpg", github: "GITHUB_URL", demo: "LIVE_DEMO_URL" },
-    { title: "Project 2", description: "Short description of your second project and what you learned building it.", tech: ["Python", "Flask"], image: "https://i.pinimg.com/1200x/8f/e4/bf/8fe4bfc7c63e50f75d6a1ce873336fac.jpg", github: "GITHUB_URL", demo: "LIVE_DEMO_URL" },
-    { title: "Project 3", description: "Short description of your third project and the tools you used.", tech: ["C++", "STL"], image: "https://i.pinimg.com/736x/46/37/c0/4637c0a064de3876761fa89fc7ee404f.jpg", github: "GITHUB_URL", demo: "LIVE_DEMO_URL" }
+    { title: "Project 1", description: "Short description of your first project and what problem it solves.", tech: ["HTML", "CSS", "JavaScript"], image: "pro1.jpg", github: "GITHUB_URL", demo: "LIVE_DEMO_URL" },
+    { title: "Project 2", description: "Short description of your second project and what you learned building it.", tech: ["Python", "Flask"], image: "pro2.jpg", github: "GITHUB_URL", demo: "LIVE_DEMO_URL" },
+    { title: "Project 3", description: "Short description of your third project and the tools you used.", tech: ["C++", "STL"], image: "pro3.jpg", github: "GITHUB_URL", demo: "LIVE_DEMO_URL" }
   ],
 
   experience: [
